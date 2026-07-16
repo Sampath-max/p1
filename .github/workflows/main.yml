@@ -1,4 +1,4 @@
-name: deploying the application
+name: deploying 
 on:
   push:
     branches: [ "master" ]
