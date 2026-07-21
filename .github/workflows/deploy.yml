@@ -20,7 +20,7 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "./*"
-          target: "/home/ubuntu/app/"
+          target: "/var/www/html/ROOT"
 
       # Step 3: Move files to Nginx folder and restart
       - name: Deploy to Nginx
@@ -30,6 +30,5 @@ jobs:
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            sudo rm -rf /var/www/html/*
-            sudo cp -r /home/ubuntu/app/* /var/www/html/
+            sudo cp -r ./* /var/www/html/ROOT
             sudo systemctl restart nginx
