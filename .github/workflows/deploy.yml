@@ -8,23 +8,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: cloning the repository
+      # Step 1: Checkout code
+      - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: copy the website to nginx
+      # Step 2: Copy files to EC2 (home folder)
+      - name: Copy files to EC2
         uses: appleboy/scp-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "./*"
-          target: "/var/www/html/ROOT/"
+          target: "/home/ubuntu/app/"
 
-      - name: deploy the application
+      # Step 3: Move files to Nginx folder and restart
+      - name: Deploy to Nginx
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.USER_NAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            sudo rm -rf /var/www/html/*
+            sudo cp -r /home/ubuntu/app/* /var/www/html/
             sudo systemctl restart nginx
