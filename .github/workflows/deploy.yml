@@ -1,0 +1,19 @@
+name: deploy the application
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: cloning the repository
+        uses: actions/checkout@v7.0.0
+      - name: copy the website to nginx
+        uses: appleboy/scp-action@v1
+        with:
+          host: " ${{ secrets.EC2_HOST }} "
+          ssh: " ${{ secrets.SSH_KEY }} "
+          user: " ${{ secrets.USER_NAME }} "
+          source: "./*"
+          target: "/var/www/html/ROOT/
+      - name: deploy the application
+        uses: appleboy/ssh-action@v1
